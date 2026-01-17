@@ -27,4 +27,39 @@ public class BookController {
        return bookService.add(book);
    }
 
+   @PutMapping("/update/{id}")
+    public Book updateBook(@PathVariable Integer id, @RequestBody Book book){
+        return bookService.update(id, book);
+   }
+
+   @DeleteMapping("/delete/{id}")
+    public void deleteBookById(@PathVariable Integer id){
+        bookService.deleteBook(id);
+   }
+
+    @GetMapping("find/title/{title}")
+    public List<Book> getAllBooksByTitle(@PathVariable String title){
+        return bookService.getAllByTitle(title);
+    }
+
+
+    @GetMapping("find/author/{author}")
+    public List<Book> getAllBooksByAuthor(@PathVariable String author){
+        return bookService.getAllByAuthor(author);
+   }
+
+    @GetMapping("find/price/{minPrice}")
+    public List<Book> getAllByMinPrice(@PathVariable Integer minPrice){
+        return bookService.getAllByMinPrice(minPrice);
+    }
+
+    @GetMapping("find/amount/{minAmount}")
+    public List<Book> getAllByMinAmount(@PathVariable Integer minAmount){
+        return bookService.getAllByMinAmount(minAmount);
+    }
+
+    @GetMapping("/{id}")
+    public Book getBook(@PathVariable Integer id) {
+        return bookService.showById(id);
+    }
 }
