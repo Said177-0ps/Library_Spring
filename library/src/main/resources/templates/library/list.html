@@ -3,16 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <title>Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        a {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        a:hover {
+            background-color: #43a047;
+        }
+
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #1976d2;
+            color: white;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+    </style>
+
 </head>
 <body>
    <h2>Book List</h2>
 
-     <ul>
-         <li th:each="book : ${books}">
-          <span th:text="${book.title}"></span>
-          -
-          <span th:text="${book.author}"></span>
-         </li>
-     </ul>
+   <a th:href="@{/books/new}">+Add New Book</a>
+
+      <table border="1">
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Amount</th>
+            </tr>
+          <tr th:each="book : ${books}">
+              <td th:text="${book.title}"></td>
+              <td th:text="${book.author}"></td>
+              <td th:text="${book.price}"></td>
+              <td th:text="${book.amount}"></td>
+              <td>
+                  <a th:href="@{/books/edit/{id}(id=${book.id})}">Edit</a>
+                  <a th:href="@{/books/delete/{id}(id=${book.id})}"
+                     onclick="return confirm('Are u Sure?')">Delete</a>
+              </td>
+          </tr>
+      </table>
+
 </body>
 </html>
