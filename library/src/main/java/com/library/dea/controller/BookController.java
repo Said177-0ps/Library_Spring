@@ -1,14 +1,18 @@
 package com.library.dea.controller;
 
+import com.library.dea.dto.BookDTO;
 import com.library.dea.entity.Book;
 import com.library.dea.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/Books")
+@RequestMapping("/api/Books")
 public class BookController {
 
     private final BookService bookService;
@@ -22,14 +26,23 @@ public class BookController {
       return bookService.showAll();
   }
 
+    @GetMapping
+    public Page<Book> getBooks(
+            @RequestParam(defaultValue = "0")int page,
+            @RequestParam(defaultValue = "5")int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return bookService.getBooks(pageable);
+    }
+
    @PostMapping("/add")
     public Book createBook(@RequestBody Book book) {
        return bookService.add(book);
    }
 
    @PutMapping("/update/{id}")
-    public Book updateBook(@PathVariable Integer id, @RequestBody Book book){
-        return bookService.update(id, book);
+    public Book updateBook(@PathVariable Integer id, @RequestBody BookDTO bookDTO){
+        return bookService.update(id, bookDTO);
    }
 
    @DeleteMapping("/delete/{id}")

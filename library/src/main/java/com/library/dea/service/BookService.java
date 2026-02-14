@@ -1,10 +1,14 @@
 package com.library.dea.service;
 
+import com.library.dea.dto.BookDTO;
 import com.library.dea.entity.Book;
+import com.library.dea.mapper.BookMapper;
 import com.library.dea.repository.BookRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -25,41 +29,59 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> getAllByTitle(@PathVariable String title){
+    public List<Book> getAllByTitle( String title){
         return bookRepository.findByTitle(title);
     }
 
-    public List<Book> getAllByAuthor(@PathVariable String author){
+    public Page<Book> getBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
+    }
+
+
+    public List<Book> getAllByAuthor(String author){
         return bookRepository.findByAuthor(author);
     }
 
-    public List<Book> getAllByMinPrice(@PathVariable Integer minPrice){
+    public List<Book> getAllByMinPrice(Integer minPrice){
         return bookRepository.findByMinAmount(minPrice);
     }
 
-    public List<Book> getAllByMinAmount(@PathVariable Integer minAmount){
+    public List<Book> getAllByMinAmount(Integer minAmount){
         return bookRepository.findByMinAmount(minAmount);
     }
 
-    public Book showById(@PathVariable Integer id) {
+    public Book showById(Integer id) {
       return bookRepository.findById(id)
               .orElseThrow(() -> new RuntimeException("There is no such A Book With the Following ID!" + id) );
     }
 
-    public Book update(@PathVariable Integer id, @RequestBody Book updatedBook){
-        return bookRepository.findById(id)
-                .map(existing -> {
+    public Book update(Integer id,BookDTO updatedBook){
+       Book existing = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("No book with following id!"));
+
                     existing.setTitle(updatedBook.getTitle());
                     existing.setAuthor(updatedBook.getAuthor());
                     existing.setPrice(updatedBook.getPrice());
                     existing.setAmount(updatedBook.getAmount());
                     return bookRepository.save(existing);
-                })
-                .orElseThrow(() -> new RuntimeException("no such a book with the following id" + id));
     }
 
-    public void deleteBook(@PathVariable Integer id) {
+    public void deleteBook(Integer id) {
         bookRepository.deleteById(id);
+    }
+
+    public Page<Book> findPaginated(int page,int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        return bookRepository.findAll(pageable);
+    }
+
+    public Page<Book> search(String keyword, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        return bookRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+    }
+
+    public void saveDto(BookDTO bookDTO) {
+        Book entity = BookMapper.toEntity(bookDTO);
+        bookRepository.save(entity);
     }
 
 }
