@@ -20,6 +20,7 @@ public class RegisterForm {
             message = "Password слишком слабый! Нужны цифры, разные регистры и спецсимволы"
     )
     private String password;
+    
 
     @NotBlank(message = "Подтвердите Пароль")
     private String confirmPassword;
