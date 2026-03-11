@@ -3,6 +3,8 @@ package com.library.dea.controller;
 import com.library.dea.dto.BookDTO;
 import com.library.dea.entity.Book;
 import com.library.dea.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/Books")
+@Tag(name = "Books API", description = "CRUD Operations for books")
 public class BookController {
 
     private final BookService bookService;
@@ -21,7 +24,9 @@ public class BookController {
         this.bookService = bookService;
     }
 
+
     @GetMapping("/all")
+    @Operation(summary = "Get All Books")
     public List<Book> getAllBooks() {
       return bookService.showAll();
   }
@@ -72,6 +77,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get All Book By Id")
     public Book getBook(@PathVariable Integer id) {
         return bookService.showById(id);
     }
